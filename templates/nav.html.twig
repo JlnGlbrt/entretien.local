@@ -1,0 +1,13 @@
+{% if is_granted('IS_AUTHENTICATED_FULLY') %}
+    <ul class="list-unstyled list-inline">
+        <li><b>Bonjour {{ user.username }} ({{ user.firstName }} {{ user.lastName }})</b></li>
+        <li><a href="{{ path('articles') }}">Accueil</a></li>
+        <li><a href="{{ path('publish') }}">Publier un article</a></li>
+        <li><a href="{{ path('logout') }}">Déconnexion</a></li>
+    </ul>
+{% else %}
+    <ul class="list-unstyled list-inline">
+        <li><a href="{{ path('login') }}">Connexion</a></li>
+        <li><a href="{{ path('register') }}">Inscription</a></li>
+    </ul>
+{% endif %}

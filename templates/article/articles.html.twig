@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+{% block title %}Fil d'actualité{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/form.css') }}">
+{% endblock %}
+
+{% block body %}
+    <div class="container main">
+        {% include 'nav.html.twig' %}
+        {% if topArticle is not null %}
+        <div class="col-sm-12">
+            <img src="{{ asset('img/articles/' ~ topArticle.image) }}" alt="" class="img-responsive col-sm-12">
+            <div class="col-sm-12">
+                <h3><a href="{{ path('article', {id: topArticle.id}) }}">{{ topArticle.title }}</a></h3>
+                <blockquote class="text-justify">
+                    <p>{{ topArticle.content|length > 100 ? topArticle.content|slice(0, 100) ~ '...' : topArticle.content}}</p>
+                    <footer>Publié par {{ topArticle.author.username }} le {{ topArticle.postedAt|date('d/m/Y à H:i')}} -
+                        {{ topArticle.comments|length }} commentaire(s)
+                        <a href="{{ path('article', {id: topArticle.id}) }}" class="pull-right">Lire la suite ></a>
+                    </footer>
+                </blockquote>
+            </div>
+        </div>
+        <div class="col-sm-12">
+            {% for index, article in latestArticles %}
+                <div class="col-sm-4 animated" data-animation="fadeInUp" data-animation-delay="{{ 100 * index }}">
+                    <img src="{{ asset('img/articles/' ~ article.image) }}" alt="" class="img-responsive img-article">
+                    <h4><a href="{{ path('article', {id: article.id}) }}">{{ article.title }}</a></h4>
+                    <p class="text-muted">Publié par {{ article.author.username }} le {{ article.postedAt|date('d/m/Y à H:i')}}</p>
+                    <p class="text-muted">{{ article.comments|length }} commentaire(s)</p>
+                    <p>{{ article.content|length > 40 ? article.content|slice(0, 40) ~ '...' : article.content}}</p>
+                    <a href="{{ path('article', {id: article.id}) }}" class="pull-right">Lire la suite ></a>
+                </div>
+            {% endfor %}
+        </div>
+        {% else %}
+            <h1 class="text-center">Aucun article publié pour l'instant</h1>
+            {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                <a class="text-center" href="{{ path('publish') }}"><h3>Publiez votre article !</h3></a>
+            {% else %}
+                <a class="text-center" href="{{ path('register') }}"><h3>Inscrivez-vous et publiez la vôtre !</h3></a>
+            {% endif %}
+        {% endif %}
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+{% endblock %}

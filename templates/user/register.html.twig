@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+{% block title %}Inscription{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/form.css') }}">
+{% endblock %}
+
+{% block body %}
+    <div class="col-sm-4 col-sm-offset-4 form-top text-center bounceIn">
+        <b><a href="{{ path('login') }}">CONNEXION</a></b><br>
+        <b><a href="{{ path('articles') }}">ARTICLES</a></b>
+    </div>
+    <div class="col-sm-4 col-sm-offset-4 form-wrapper">
+        {{ form_start(form) }}
+        {{ form_row(form.firstName) }}
+        {{ form_row(form.lastName) }}
+        {{ form_row(form.username) }}
+        {{ form_row(form.email) }}
+        {{ form_row(form.password) }}
+        {{ form_row(form.submit) }}
+        {{ form_end(form) }}
+        <p>* Champs obligatoires</p>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+{% endblock %}

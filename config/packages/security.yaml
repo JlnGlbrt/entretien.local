@@ -1,0 +1,51 @@
+security:
+    # Déclaration des differentes sources d'authentification
+    providers:
+        # Source mixte d'authentification, associant une source locale et distante
+        chain_provider:
+            chain:
+                providers: [db_users, in_memory]
+        # Source locale : source d'authentifiation en mémoire
+        in_memory:
+            memory:
+                users:
+                    # Compte admin unique pour l'administrateur du site
+                    admin:
+                        password: $2y$13$UbV6NozBoh3GCCHSfqsYNOtYkjkmGHIAgZbKDkCJZ4wdNT/hMHnAO #PWD@admin!
+                        roles: ['ROLE_ADMIN']
+
+        # Source distante : source d'authentification en BDD
+        db_users:
+            entity: { class: App\Entity\User, property: username }
+    encoders:
+        # Encodage des mots de passe: BCRYPT pour la source source locale et distante
+        Symfony\Component\Security\Core\User\User:
+            algorithm: bcrypt
+            cost: 12
+        App\Entity\User: bcrypt
+
+    firewalls:
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+
+        main:
+            pattern: ^/
+            anonymous: true
+            # Choix de la source d'authentification
+            provider: chain_provider
+
+            form_login:
+                check_path: login
+                login_path: login
+                default_target_path: articles
+
+            logout:
+                path: logout
+                target: articles
+    # Gestion des acces
+    access_control:
+        - { path: ^/, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/register, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        #- { path: ^/admin, roles: ROLE_ADMIN }

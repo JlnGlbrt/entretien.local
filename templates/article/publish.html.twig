@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+{% block title %}Nouvelle publication{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/form.css') }}">
+{% endblock %}
+
+{% block body %}
+    <div class="col-sm-4 col-sm-offset-4 form-top text-center bounceIn">
+        <b><a href="/">ARTICLES</a></b>
+    </div>
+
+    <div class="col-sm-4 col-sm-offset-4 form-wrapper">
+        {{ form_start(form) }}
+        {{ form_row(form.title) }}
+        {{ form_row(form.content) }}
+        {{ form_row(form.image) }}
+        {{ form_row(form.submit) }}
+        {{ form_end(form) }}
+        <p>* Champs obligatoires</p>
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+{% endblock %}

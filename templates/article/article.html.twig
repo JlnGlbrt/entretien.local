@@ -1,0 +1,61 @@
+{% extends 'base.html.twig' %}
+{% block title %}{{ article.title }}{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/form.css') }}">
+{% endblock %}
+
+{% block body %}
+    <div class="container main">
+        {% include 'nav.html.twig' %}
+        <img src="{{ asset('img/articles/' ~ article.image) }}" alt="" class="img-responsive col-sm-12">
+        <div class="col-sm-12">
+            <h2>{{ article.title }}</h2>
+            <blockquote class="text-justify">
+                <p>{{ article.content }}</p>
+                <footer>Publié par {{ article.author.username }} le {{ article.postedAt|date('d/m/Y à H:i')}}
+                    {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                        {% if user == article.author or is_granted('ROLE_ADMIN') %}
+                            <a href="{{ path('dl-article', {id: article.id}) }}" class="pull-right">Supprimer l'article</a>
+                        {% endif %}
+                    {% endif %}
+                </footer>
+            </blockquote>
+        </div>
+        {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+            {{ form_start(form) }}
+            {{ form_row(form.content) }}
+            {{ form_row(form.submit) }}
+            {{ form_end(form) }}
+        {% endif %}
+        {% for comment in comments %}
+            <div class="row col-sm-12 col-sm-offset-1">
+                <div class="col-sm-1">
+                    <div class="thumbnail">
+                        <img class="img-responsive user-photo" src="https://ssl.gstatic.com/accounts/ui/avatar_2x.png">
+                    </div>
+                </div>
+
+                <div class="col-sm-10">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <strong>{{ comment.author.username }}</strong> - <span class="text-muted">Le {{ comment.postedAt|date('d/m/Y à H:i')}}</span>
+                            {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                                {% if user == comment.author or is_granted('ROLE_ADMIN') %}
+                                    <a href="{{ path('dl-comment', {id: comment.id}) }}" class="pull-right">Supprimer le commentaire</a>
+                                {% endif %}
+                            {% endif %}
+                        </div>
+                        <div class="panel-body">
+                            {{ comment.content }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+{% endblock %}
